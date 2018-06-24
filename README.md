@@ -10,7 +10,7 @@ Installation
 5. Replace `discord_secret` in `config.ini` with your bot user token 
 5. Change values in `config.ini` with appropriate values
 6. Create a virtual environment with `virtualenv . -p /usr/bin/python3`
-7. Activate with `source bin/activate` and install required packages with `pip install requirements.txt`
+7. Activate with `source bin/activate` and install required packages with `pip install -r requirements.txt`
 8. Run bot with `python bot.py`
 
 Functions
