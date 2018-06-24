@@ -22,7 +22,7 @@ zab.login(zabbix_user, zabbix_password)
 zbot = Bot(command_prefix="z?")
 
 
-#gets 
+#gets first result from zabbix API and returns a dict  
 def get_item(host_name, item):
     host_values = { 'hostname': host_name,
                     'item': item,
