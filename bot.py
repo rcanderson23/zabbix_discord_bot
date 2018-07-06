@@ -21,14 +21,20 @@ zbot = Bot(command_prefix="z?")
 
 zab = zabbixbot(zabbix_user, zabbix_password, zabbix_url)
 
-@zbot.command(name='get',
+@zbot.command(name='getitem',
               description="Gets information from zabbix server")
-async def get(host, item):
-    output = ""
-    result = zab.get_item(host, item)
-    for key,value in result.items():
-        output += "%s: %s\n" % (key, value)
+async def get_item(hostname, item):
+    output = "__**Hostname:**__ **%s**\n\n" % hostname
+    result = zab.get_item(hostname, item)
+    for values in result:
+        output += "**item:** %s\n**lastvalue:** %s\n**units:** %s\n\n" \
+            % (values['key_'], values['lastvalue'], values['units'])
     await zbot.say(output)
 
+@zbot.command(name='listitems',
+              description="Lists item values available for host")
+async def list_items(hostname):
+    output = "__**Hostname:**__ **%s**\n\n" % hostname
+    result = zab.get_item(hostname, item)
 
 zbot.run(discord_secret)
