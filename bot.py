@@ -1,6 +1,7 @@
 import configparser
 import os
 import sys
+import operator
 from discord.ext.commands import Bot
 import asyncio
 from zabbixbot import zabbixbot
@@ -34,7 +35,20 @@ async def get_item(hostname, item):
 @zbot.command(name='listitems',
               description="Lists item values available for host")
 async def list_items(hostname):
-    output = "__**Hostname:**__ **%s**\n\n" % hostname
-    result = zab.get_item(hostname, item)
+    output = "__**Hostname:**__ **%s**\nName:Key\n\n" % hostname
+    result = zab.get_item(hostname, 'all')
+    result.sort(key=operator.itemgetter('name'))
+    for item in result:
+        output += "%s: %s\n" % (item['name'],item['key_'])
+    await zbot.say(output)
 
+@zbot.command(name='listhosts',
+              description="Lists hosts in zabbix")
+async def list_hosts():
+    output = "__**Hosts:**__\n\n"
+    result = zab.get_hosts()
+    result.sort(key=operator.itemgetter('name'))
+    for host in result:
+        output += "%s\n" % host['name']
+    await zbot.say(output)
 zbot.run(discord_secret)

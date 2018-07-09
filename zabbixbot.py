@@ -7,7 +7,10 @@ class zabbixbot:
         
     #Returns dict of host including item, last value, and unit
     def get_item(self, hostname, item):
-        value = self.zab.item.get(host=hostname, search={'key_': '%s' % item})
+        if item == 'all':
+            value = self.zab.item.get(host=hostname)
+        else:
+            value = self.zab.item.get(host=hostname, search={'key_': '%s' % item})
         return value
 
     #Returns a list of host dicts including name and hostid
