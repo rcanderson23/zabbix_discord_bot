@@ -18,3 +18,10 @@ class zabbixbot:
         hosts = self.zab.host.get(output=["hostid","name"])
         return hosts
 
+    def get_problems(self):
+        problems = self.zab.trigger.get(only_true=1,
+                                             monitored=1,
+                                             active=1,
+                                             selectHosts=['host'],
+                                             expandDescription=1)
+        return problems

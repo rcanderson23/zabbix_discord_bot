@@ -51,4 +51,18 @@ async def list_hosts():
     for host in result:
         output += "%s\n" % host['name']
     await zbot.say(output)
+
+@zbot.command(name='listproblems',
+              description="Lists triggered events in zabbix")
+async def list_problems():
+    output = ""
+    result = zab.get_problems()
+    if not result:
+        await zbot.say("No problems to report")
+    else:
+        for trigger in result:
+            output += "**Trigger:** %s \n**Host:** %s\n\n" % \
+                (trigger['description'], trigger['hosts'][0]['host'])
+    await zbot.say(output)
+
 zbot.run(discord_secret)
