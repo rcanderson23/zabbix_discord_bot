@@ -5,3 +5,4 @@ lib64
 pip-selfcheck.json
 config.ini
 __pycache__/
+test.py	
