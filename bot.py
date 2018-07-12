@@ -58,7 +58,7 @@ async def list_problems():
     output = ""
     result = zab.get_problems()
     if not result:
-        await zbot.say("No problems to report")
+        output += "No problems to report"
     else:
         for trigger in result:
             output += "**Trigger:** %s \n**Host:** %s\n\n" % \
