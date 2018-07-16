@@ -6,41 +6,39 @@ from discord.ext.commands import Bot
 import asyncio
 from zabbixbot import zabbixbot
 
-if __name__ == "__main__":
-    config = configparser.ConfigParser()
-    try:
-        config.read_file(open('config.ini'))
-    except FileNotFoundError:
-        exit('Error: File not found. Check file name.')
-    
-    discord_secret = config['discord']['discord_secret']
-    zabbix_url = config['zabbix']['zabbix_url']
-    zabbix_user = config['zabbix']['zabbix_user']
-    zabbix_password = config['zabbix']['zabbix_password']
-    
-    zbot = Bot(command_prefix="z?")
-    zab = zabbixbot(zabbix_user, zabbix_password, zabbix_url)
-    
-    zbot.run(discord_secret)
+
+config = configparser.ConfigParser()
+try:
+    config.read_file(open('config.ini'))
+except FileNotFoundError:
+    exit('Error: File not found. Check file name.')
+
+discord_secret = config['discord']['discord_secret']
+zabbix_url = config['zabbix']['zabbix_url']
+zabbix_user = config['zabbix']['zabbix_user']
+zabbix_password = config['zabbix']['zabbix_password']
+
+zbot = Bot(command_prefix="z?")
+zab = zabbixbot(zabbix_user, zabbix_password, zabbix_url)
+
 
 @zbot.command(name='getitem',
               description="Gets information from zabbix server")
 async def get_item(hostname, item):
-    output = "__**Hostname:**__ **%s**\n\n" % hostname
+    output = f"__**Hostname:**__ **{hostname}**\n\n"
     result = zab.get_item(hostname, item)
     for values in result:
-        output += "**item:** %s\n**lastvalue:** %s\n**units:** %s\n\n" \
-            % (values['key_'], values['lastvalue'], values['units'])
+        output += f"**item:** {values['key_']}\n**lastvalue:** {values['lastvalue']}\n**units:** {values['units']}\n\n"
     await zbot.say(output)
 
 @zbot.command(name='listitems',
               description="Lists item values available for host")
 async def list_items(hostname):
-    output = "__**Hostname:**__ **%s**\nName:Key\n\n" % hostname
+    output = f"__**Hostname:**__ **{hostname}**\nName:Key\n\n"
     result = zab.get_item(hostname, 'all')
     result.sort(key=operator.itemgetter('name'))
     for item in result:
-        output += "%s: %s\n" % (item['name'],item['key_'])
+        output += f"{item['name']}:{item['key_']}\n"
     await zbot.say(output)
 
 @zbot.command(name='listhosts',
@@ -50,7 +48,7 @@ async def list_hosts():
     result = zab.get_hosts()
     result.sort(key=operator.itemgetter('name'))
     for host in result:
-        output += "%s\n" % host['name']
+        output += f"{host['name']}\n"
     await zbot.say(output)
 
 @zbot.command(name='listproblems',
@@ -62,8 +60,8 @@ async def list_problems():
         output += "No problems to report"
     else:
         for trigger in result:
-            output += "**Trigger:** %s \n**Host:** %s\n\n" % \
-                (trigger['description'], trigger['hosts'][0]['host'])
+            output += f"**Trigger:** {trigger['description']} \n**Host:** {trigger['hosts'][0]['host']}\n\n"
     await zbot.say(output)
 
 
+zbot.run(discord_secret)
