@@ -6,21 +6,22 @@ from discord.ext.commands import Bot
 import asyncio
 from zabbixbot import zabbixbot
 
-config = configparser.ConfigParser()
-try:
-    config.read_file(open('config.ini'))
-except FileNotFoundError:
-    exit('Error: File not found. Check file name.')
-
-discord_secret = config['discord']['discord_secret']
-zabbix_url = config['zabbix']['zabbix_url']
-zabbix_user = config['zabbix']['zabbix_user']
-zabbix_password = config['zabbix']['zabbix_password']
-
-
-zbot = Bot(command_prefix="z?")
-
-zab = zabbixbot(zabbix_user, zabbix_password, zabbix_url)
+if __name__ == "__main__":
+    config = configparser.ConfigParser()
+    try:
+        config.read_file(open('config.ini'))
+    except FileNotFoundError:
+        exit('Error: File not found. Check file name.')
+    
+    discord_secret = config['discord']['discord_secret']
+    zabbix_url = config['zabbix']['zabbix_url']
+    zabbix_user = config['zabbix']['zabbix_user']
+    zabbix_password = config['zabbix']['zabbix_password']
+    
+    zbot = Bot(command_prefix="z?")
+    zab = zabbixbot(zabbix_user, zabbix_password, zabbix_url)
+    
+    zbot.run(discord_secret)
 
 @zbot.command(name='getitem',
               description="Gets information from zabbix server")
@@ -65,4 +66,4 @@ async def list_problems():
                 (trigger['description'], trigger['hosts'][0]['host'])
     await zbot.say(output)
 
-zbot.run(discord_secret)
+
