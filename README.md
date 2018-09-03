@@ -16,4 +16,7 @@ Installation
 Functions
 --------------------
 
-`z?get host zabbix.item` will retreive the last value of that item from specified host in your zabbix server.
+`z?get $host $zabbix.item` will retreive the last value of that item from specified host in your zabbix server.<br>
+`z?listitems $host` will list available items for the host<br>
+`z?listshosts` will output all monitored hosts in Zabbix<br>
+`z?listproblems` will output all items in a problem state<br>
